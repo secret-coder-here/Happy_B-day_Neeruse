@@ -822,3 +822,40 @@ body {
     0% { transform: scale(0.5); opacity: 1; } 
     100% { transform: scale(2); opacity: 0; } 
 }
+
+/* Optimized responsive grid: automatically stacks on phones, rows on tablets/desktops */
+.frame-grid {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap onto the next line on small screens */
+    justify-content: center;
+    gap: 20px; /* Reduces gap on smaller screens for better fit */
+    margin-top: 40px;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* Ensure polaroid cards adapt their width based on device */
+.dashboard-polaroid-card {
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 16px;
+    width: 45%; /* Takes up nearly half the screen width on phones */
+    max-width: 160px; /* Keeps size consistent on large screens */
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Tablet and Desktop scaling */
+@media (min-width: 600px) {
+    .dashboard-polaroid-card {
+        width: 160px; /* Forces fixed size on larger screens */
+    }
+    .frame-grid {
+        gap: 40px;
+    }
+}
