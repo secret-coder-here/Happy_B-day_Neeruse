@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Someone Special ✨</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Floating Background Hearts Canvas Overlay -->
+    <div class="hearts-bg" id="heartsBackground"></div>
+
+    <!-- Visual Camera Flash Screen Overlay -->
+    <div class="camera-flash-overlay" id="cameraFlashZone"></div>
+
+    <!-- Global Background Song Player Component -->
+    <div class="audio-player">
+        <span class="music-icon">🎵</span>
+        <span class="song-title">Until I Found You - Stephen Sanchez</span>
+        <audio id="bgMusic" loop src="s.m4a"></audio>
+        <button id="audioToggle" onclick="togglePlay()">Play 🎧</button>
+    </div>
+
+    <!-- SCREEN 1: Snoopy Heart Keypad Gate -->
+    <div id="screen1" class="screen active">
+        <div class="split-layout">
+            <div class="side-graphic">
+                <img src="flower.jpg" alt="Snoopy Flowers" class="snoopy-gif animate-float">
+            </div>
+            <div class="keypad-container glass-card slide-up">
+                <div class="passcode-display">
+                    <div class="dot" id="dot1"></div>
+                    <div class="dot" id="dot2"></div>
+                    <div class="dot" id="dot3"></div>
+                    <div class="dot" id="dot4"></div>
+                </div>
+                
+                <div class="heart-grid">
+                    <button class="heart-btn" onclick="pressKey('1')"><span class="btn-text">1</span></button>
+                    <button class="heart-btn" onclick="pressKey('2')"><span class="btn-text">2</span></button>
+                    <button class="heart-btn" onclick="pressKey('3')"><span class="btn-text">3</span></button>
+                    <button class="heart-btn" onclick="pressKey('4')"><span class="btn-text">4</span></button>
+                    <button class="heart-btn" onclick="pressKey('5')"><span class="btn-text">5</span></button>
+                    <button class="heart-btn" onclick="pressKey('6')"><span class="btn-text">6</span></button>
+                    <button class="heart-btn" onclick="pressKey('7')"><span class="btn-text">7</span></button>
+                    <button class="heart-btn" onclick="pressKey('8')"><span class="btn-text">8</span></button>
+                    <button class="heart-btn" onclick="pressKey('9')"><span class="btn-text">9</span></button>
+                    <button class="heart-btn specialized" onclick="pressKey('*')"><span class="btn-text">*</span></button>
+                    <button class="heart-btn" onclick="pressKey('0')"><span class="btn-text">0</span></button>
+                    <button class="heart-btn specialized" onclick="clearCode()"><span class="btn-text">#</span></button>
+                </div>
+                
+                <button class="btn-primary" onclick="verifyHeartPasscode()">Next</button>
+                <p id="passcodeError" class="error-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: Core Dashboard Hub Menu -->
+    <div id="screen2" class="screen">
+        <div class="container fade-in">
+            <header class="main-header text-center">
+                <h1 class="glow-text">Your Birthday Chapters ✨</h1>
+                <p class="aesthetic-para">Complete the hidden activity inside each frame to unlock my secret messages to you.</p>
+            </header>
+
+            <main class="frame-grid">
+                <!-- Polaroid Frame 1 -->
+                <div class="dashboard-polaroid-card" onclick="nextScreen(3)">
+                    <div class="chapter-img-wrapper">
+                        <img src="camera.jpg" alt="Camera Chapter Layout Illustration" class="chapter-main-img">
+                    </div>
+                    <div class="polaroid-label-zone">
+                        <h3>Chapter I</h3>
+                        <span class="status-tag status-locked" id="hub-task1-status">Locked 🔒</span>
+                    </div>
+                </div>
+
+                <!-- Polaroid Frame 2 -->
+                <div class="dashboard-polaroid-card" onclick="nextScreen(6)">
+                    <div class="chapter-img-wrapper">
+                        <img src="bottle.jpg" alt="Message Bottle Layout Illustration" class="chapter-main-img">
+                    </div>
+                    <div class="polaroid-label-zone">
+                        <h3>Chapter II</h3>
+                        <span class="status-tag status-locked" id="hub-task2-status">Locked 🔒</span>
+                    </div>
+                </div>
+
+                <!-- Polaroid Frame 3 -->
+                <div class="dashboard-polaroid-card" onclick="nextScreen(8)">
+                    <div class="chapter-img-wrapper">
+                        <img src="heart.jpg" alt="Final Heart Layout Illustration" class="chapter-main-img">
+                    </div>
+                    <div class="polaroid-label-zone">
+                        <h3>Chapter III</h3>
+                        <span class="status-tag status-locked" id="hub-task3-status">Locked 🔒</span>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: Chapter 1 Activity (Memory Matching Game) -->
+    <div id="screen3" class="screen">
+        <div class="centered-layout glass-card larger-card slide-up">
+            <h1 class="handwritten-title">Chapter I: Making Connections</h1>
+            <p class="sub-heading">Match the romantic symbols perfectly to unlock the camera memory!</p>
+            
+            <div class="memory-game" id="gameBoard"></div>
+            <p id="gameMessage" class="success-alert-text"></p>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: Chapter 1 Camera Snapshot Viewfinder -->
+    <div id="screen4" class="screen">
+        <div class="centered-layout glass-card larger-card slide-up">
+            <h1 class="handwritten-title">Capture the Magic 📸</h1>
+            <p class="sub-heading">A snapshot of the most stunning girl in the universe is waiting to load...</p>
+            
+            <div class="camera-rectangular-viewfinder">
+                <div class="camera-hud-top">
+                    <span class="hud-item blinking-rec">● REC</span>
+                    <span class="hud-item white-hud-text">1080p 60fps</span>
+                    <span class="hud-item white-hud-text">🔋 100%</span>
+                </div>
+                <div class="viewfinder-grid-line line-v1"></div>
+                <div class="viewfinder-grid-line line-v2"></div>
+                <div class="viewfinder-grid-line line-h1"></div>
+                <div class="viewfinder-grid-line line-h2"></div>
+                <div class="corner-bracket top-left"></div>
+                <div class="corner-bracket top-right"></div>
+                <div class="corner-bracket bottom-left"></div>
+                <div class="corner-bracket bottom-right"></div>
+                <div class="camera-focus-bracket"></div>
+                
+                <div class="lens-preview-placeholder">
+                    <div class="aesthetic-scanner-pulse">
+                        <div class="scanner-ring"></div>
+                        <span class="scanner-heart">❤️</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-primary highlighted-btn shutter-capture-action" id="snapShutterBtn" onclick="executeCameraSnap()">Capture Photo ⚡</button>
+            
+            <div class="polaroid-eject-tray" id="ejectTray">
+                <div class="suspense-film-card animate-float">
+                    <div class="film-magic-shimmer"></div>
+                    <span class="film-loading-icon">✨🎞️✨</span>
+                    <p class="developing-text-status">Developing your smile...</p>
+                </div>
+                <button class="btn-primary premium-gold" style="margin-top: 15px;" onclick="nextScreen(5)">Reveal Polaroid Card ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 5: Chapter 1 Reveal (Developed Polaroid Photo Card) -->
+    <div id="screen5" class="screen">
+        <div class="split-layout glass-card larger-card reverse-flex slide-up">
+            <div class="polaroid-wrapper delayed-photo-reveal">
+                <img src="1.jpeg" alt="Developed Polaroid Portrait" class="polaroid-photo">
+            </div>
+            <div class="text-side">
+                <h1 class="accent-title-bold large-txt">Who is this beautiful?? 😍</h1>
+                <p class="dialogue-bubble">"Wow... every single time I look at your picture, my heart skips a beat. You look absolutely stunning here. Happy Birthday, gorgeous!"</p>
+                <button class="btn-primary highlighted-btn" onclick="returnToDashboard(1)">Back to Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 6: Chapter 2 Activity (The Island Beach Treasure Hunt) -->
+    <div id="screen6" class="screen">
+        <div class="centered-layout slide-up">
+            <div class="beach-treasure-map">
+                <div class="map-compass-rose">🧭</div>
+                <div class="island-feature palm-island">岛 🏝️ <br><span>Memory Isle</span></div>
+                <div class="island-feature sea-monster">⛵ <br><span>Our Ship</span></div>
+                
+                <!-- Pinned individual photo card onto the map corner grid -->
+                <div class="map-corner-scrapbook-photo pin-left animate-float">
+                    <img src="d.jpeg" alt="Her Individual Scrapbook Frame">
+                </div>
+
+                <h2 class="pirate-map-title">The Secret Coordinates</h2>
+                <p class="pirate-map-subtitle">Follow the trails along the sand and click the red "X" to uncover my hidden treasure... 🗺️</p>
+
+                <div class="dotted-trail-line"></div>
+
+                <div class="treasure-x-spot" onclick="triggerChestPopup()">
+                    <span class="animated-ping-marker"></span>
+                    <span class="x-mark-character">❌</span>
+                </div>
+
+                <div class="chest-modal-overlay" id="chestModal">
+                    <div class="chest-modal-content">
+                        <div class="animated-chest-icon" id="chestEmoji">🔒🎁</div>
+                        <h3>You Found My Secret Chest!</h3>
+                        <p>The chest is locked tightly with love. Click below to open it!</p>
+                        <button class="btn-primary pirate-open-btn" id="openChestBtn" onclick="unlockChestSequence()">Open Chest ✨</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 7: Chapter 2 Reveal (Love Scroll) -->
+    <div id="screen7" class="screen">
+        <div class="centered-layout slide-up">
+            <div class="love-scroll-paper">
+                <div class="scroll-ribbon">💝</div>
+                
+                <div class="scroll-couple-photo-container">
+                    <img src="e.jpeg" alt="Polaroid Pic of the Couple" class="scroll-couple-photo">
+                </div>
+
+                <h2 class="scroll-heading">My Deepest Treasure</h2>
+                <div class="scroll-divider">⚓ ~ ~ ~ ⚓</div>
+                
+                <div class="scroll-body-content">
+                    <p class="dialogue-bubble-dark">"I searched across all the coordinates of this island map, and guess what? The ultimate treasure wasn't gold coins... it was us together all along."</p>
+                    <p>Happy birthday babe! I know I always say this to you, but I really do miss you. Thank you for being an incredible girlfriend and for always supporting me through every storm. You are my absolute safe haven. ❤️</p>
+                </div>
+            </div>
+            <button class="btn-primary pirate-return-btn" onclick="returnToDashboard(2)">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 8: Chapter 3 Activity (Interactive Touch Hold Pressure Zone) -->
+    <div id="screen8" class="screen">
+        <div class="centered-layout glass-card slide-up">
+            <h1 class="handwritten-title">Chapter III: The Forever Connection</h1>
+            <p class="sub-heading">Press down and hold the golden heart tightly to seal this beautiful moment in time and unlock my final letter...</p>
+            
+            <div class="hold-heart-container" id="holdHeartZone" onmousedown="startHeartHold()" onmouseup="endHeartHold()" ontouchstart="startHeartHold()" ontouchend="endHeartHold()">
+                <div class="pulsing-glow-circle"></div>
+                <span class="giant-hold-heart">❤️</span>
+            </div>
+            
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar-fill" id="heartProgress"></div>
+            </div>
+            <p id="holdInstructions" class="hold-status-subtext">Hold for 3 seconds... ⏳</p>
+        </div>
+    </div>
+
+    <!-- SCREEN 9: Chapter 3 Reveal (Vintage Letter Showcase) -->
+    <div id="screen9" class="screen">
+        <div class="centered-layout vintage-envelope-container slide-up">
+            <div class="vintage-paper-scroll animate-float">
+                
+                <!-- Top Individual Photo Rows -->
+                <div class="vintage-pinned-photos">
+                    <div class="pinned-photo pin-left">
+                        <img src="left.jpeg" alt="Her Individual Picture Left" class="vintage-img">
+                    </div>
+                    <div class="pinned-photo pin-right">
+                        <img src="right.jpeg" alt="Her Individual Picture Right" class="vintage-img">
+                    </div>
+                </div>
+
+                <div class="vintage-wax-seal" style="margin-top: 30px;">⚜️</div>
+                <h1 class="vintage-heading">My Ultimate Confession</h1>
+                <hr class="vintage-divider">
+               
+                <div class="vintage-letter-body">
+                    <p>Dearest Neerusee,</p>
+                    <p>As you read these words, surrounded by the echoes of everything we have built, I want you to take a deep breath and realize how profoundly you affect my universe. Your smile handles my darkest hours, your presence transforms the ordinary into absolute magic, and your love is a prize I hold higher than anything else on Earth.</p>
+                    <p>This web workspace belongs entirely to you—a tiny capsule built to remind you of my devotion whenever you feel lost. Thank you for walking beside me, for choosing me, and for simply being the masterpiece that you are.</p>
+                    <p>Happy Birthday, my beautiful soul. Today, tomorrow, and for all the lifetimes ahead, I am completely yours.</p>
+                    
+                    <div class="letter-footer-flex-container">
+                        <div class="letter-footer-couple-card slant-left-polaroid">
+                            <img src="0.jpeg" alt="Our Shared Together Frame Asset" class="footer-couple-img">
+                            <p class="footer-card-caption">&nbsp;&nbsp;Us<br>&nbsp;&nbsp;Forever 🔒</p>
+                        </div>
+
+                        <div class="vintage-signature">
+                            Forever & Always, <br> 
+                            <span>Your Love</span>
+                        </div>
+                    </div>
+                </div>
+            <button class="btn-primary return-hub-btn premium-gold" onclick="returnToDashboard(3)">✨ View Dashboard Hub</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

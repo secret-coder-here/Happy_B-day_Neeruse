@@ -1,0 +1,824 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@600&family=Fredoka+One&family=Itim&family=Patrick+Hand&family=Poppins:wght@300;400;600&family=Rye&display=swap');
+
+/* ==========================================
+   1. GLOBAL SYSTEM VARIABLES & RESETS
+   ========================================== */
+:root {
+    --bg-gradient: radial-gradient(circle at center, #3a1d38 0%, #1a0b1c 100%);
+    --accent-pink: #ff6b8b;
+    --accent-sub: #ffb6c1;
+    --text-white: #ffffff;
+    --text-muted: #d1b8d6;
+    --glass-background: rgba(46, 22, 48, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    background: var(--bg-gradient);
+    font-family: 'Itim', cursive;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* ==========================================
+   2. GLOBAL INTERFACE COMPONENTS (AUDIO & BG)
+   ========================================== */
+.hearts-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    display: none;
+}
+
+.floating-heart-element {
+    position: absolute;
+    bottom: -50px;
+    color: rgba(255, 107, 139, 0.45);
+    font-size: 1.5rem;
+    animation: driftUpwards linear forwards;
+}
+
+@keyframes driftUpwards {
+    0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(-105vh) scale(1.3) rotate(360deg); opacity: 0; }
+}
+
+.audio-player {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 30px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+}
+
+.song-title {
+    font-size: 0.8rem;
+    color: #f0c3f0;
+    font-family: 'Patrick Hand', cursive;
+}
+
+.audio-player button {
+    background: var(--accent-pink);
+    border: none;
+    color: var(--text-white);
+    padding: 4px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.82rem;
+}
+
+/* ==========================================
+   3. SCREEN VIEWS MANAGEMENT & PRIMARY CARDS
+   ========================================== */
+.screen {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    padding: 85px 20px 40px 20px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.glass-card {
+    background: var(--glass-background);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 45px 35px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 25px 55px rgba(0, 0, 0, 0.45);
+    text-align: center;
+}
+
+.larger-card {
+    max-width: 720px;
+}
+
+/* Typography Elements */
+.handwritten-title { font-family: 'Patrick Hand', cursive; color: #ff85a2; font-size: 2.8rem; margin-bottom: 15px; }
+.accent-title-bold { font-family: 'Patrick Hand', cursive; color: var(--accent-pink); font-size: 2.4rem; margin-bottom: 10px; }
+.sub-heading { color: var(--text-muted); font-size: 1.2rem; margin-bottom: 20px; }
+.glow-text { font-family: 'Dancing Script', cursive; color: var(--accent-pink); font-size: 3.2rem; margin-bottom: 15px; }
+.aesthetic-para { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px; text-align: center; }
+
+/* Control Buttons */
+.btn-primary {
+    background-color: var(--accent-sub);
+    color: #d9534f;
+    border: none;
+    font-family: 'Fredoka One', sans-serif;
+    padding: 12px 35px;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    box-shadow: 0 4px 0px #e09ba5;
+    transition: all 0.1s ease;
+}
+
+.btn-primary:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0px #e09ba5;
+}
+
+.highlighted-btn {
+    background-color: var(--accent-pink);
+    color: var(--text-white);
+    box-shadow: 0 4px 0px #d45270;
+}
+
+/* ==========================================
+   4. FRONT ENTRY SCREEN: SNOOPY KEYPAD FIX
+   ========================================== */
+.split-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px; 
+    width: 100%;
+    max-width: 950px;
+}
+
+@media (min-width: 768px) {
+    .split-layout { 
+        flex-direction: row; 
+        justify-content: space-evenly;
+        gap: 60px;
+    }
+}
+
+.side-graphic {
+    max-width: 320px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.snoopy-gif {
+    width: 100%;
+    height: auto;
+}
+
+.keypad-container {
+    width: 100%;
+    max-width: 340px;
+    background: rgba(35, 15, 37, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 24px;
+    padding: 30px 24px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.4);
+}
+
+.passcode-display {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    justify-content: center;
+}
+
+.passcode-display .dot {
+    width: 48px;
+    height: 48px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.6rem;
+    color: #ff85a2;
+}
+
+.heart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px 20px;
+    width: 100%;
+    justify-items: center;
+}
+
+.heart-btn {
+    width: 75px;
+    height: 75px;
+    background-color: var(--accent-sub);
+    border: none;
+    clip-path: path('M37.5 13.8C33.1-4 4.4-1.2 4.4 21.6c0 22.7 30.9 34.2 33.1 47.8 2.2-13.6 33.1-25.1 33.1-47.8C70.6-1.2 41.9-4 37.5 13.8z');
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s ease;
+}
+
+.heart-btn:hover {
+    transform: scale(1.1);
+}
+
+.heart-btn .btn-text {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-white);
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 1.15rem;
+}
+
+.error-text {
+    color: #ff5276;
+    font-size: 0.95rem;
+    margin-top: 12px;
+    min-height: 20px;
+}
+
+/* ==========================================
+   5. FIXXED: UNIFORM DASHBOARD FRAMES GRID
+   ========================================== */
+.frame-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+    width: 100%;
+    max-width: 800px;
+    justify-items: center;
+    align-items: start;
+}
+
+.dashboard-polaroid-card {
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 16px;
+    width: 160px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dashboard-polaroid-card:hover {
+    transform: scale(1.08) translateY(-5px);
+}
+
+.chapter-img-wrapper {
+    width: 100%;
+    height: 150px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.chapter-main-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; 
+    border-radius: 16px;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5)); 
+}
+
+.polaroid-label-zone {
+    width: 100%;
+    padding-top: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.polaroid-label-zone h3 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.8rem;
+    color: var(--text-white);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); 
+    margin: 0;
+}
+
+.status-tag {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-family: 'Itim', sans-serif;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4); 
+}
+
+.status-locked { background-color: #ffeaa7; color: #d6a21e; }
+.status-unlocked { background-color: #d4edda; color: #155724; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); }
+.dashboard-polaroid-card.completed-chapter .chapter-main-img { border: 2px solid #28a745; filter: drop-shadow(0 10px 25px rgba(40, 167, 69, 0.35)); }
+
+/* ==========================================
+   6. CHAPTER MINIGAMES & VIEWS CONTENT CONFIG
+   ========================================== */
+
+/* Task 1 Component: Memory Matcher */
+.memory-game {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 400px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.memory-card {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s;
+}
+
+.memory-card.flipped {
+    background: rgba(255, 107, 139, 0.3);
+    border-color: var(--accent-pink);
+}
+
+/* Viewfinder and Flash Mechanics Layout */
+.camera-rectangular-viewfinder {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 4 / 3;
+    background: #0f0b11;
+    border: 3px solid rgba(255, 107, 139, 0.4);
+    border-radius: 16px;
+    margin: 25px auto;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+.camera-hud-top {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 50; 
+}
+
+.hud-item { font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; }
+.white-hud-text { color: #ffffff !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); }
+.blinking-rec { color: #ff4a70; animation: pulseBlink 1s infinite steps(2); text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); }
+@keyframes pulseBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.viewfinder-grid-line { position: absolute; background: rgba(255, 255, 255, 0.12); pointer-events: none; z-index: 2; }
+.line-v1 { left: 33.33%; top: 0; width: 1px; height: 100%; }
+.line-v2 { left: 66.66%; top: 0; width: 1px; height: 100%; }
+.line-h1 { top: 33.33%; left: 0; height: 1px; width: 100%; }
+.line-h2 { top: 66.66%; left: 0; height: 1px; width: 100%; }
+
+.corner-bracket { position: absolute; width: 20px; height: 20px; border: 2px solid rgba(255, 255, 255, 0.4); pointer-events: none; z-index: 5; }
+.top-left { top: 45px; left: 20px; border-right: 0; border-bottom: 0; }
+.top-right { top: 45px; right: 20px; border-left: 0; border-bottom: 0; }
+.bottom-left { bottom: 20px; left: 20px; border-right: 0; border-top: 0; }
+.bottom-right { bottom: 20px; right: 20px; border-left: 0; border-top: 0; }
+
+.camera-focus-bracket { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 55px; height: 55px; border: 1.5px solid var(--accent-pink); border-radius: 8px; z-index: 5; animation: boxScan 2s infinite ease-in-out; }
+@keyframes boxScan { 0%, 100% { transform: translate(-50%, -50%) scale(1); border-color: var(--accent-pink); } 50% { transform: translate(-50%, -50%) scale(1.1); border-color: #4affb0; } }
+
+.lens-preview-placeholder { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1; }
+
+.aesthetic-scanner-pulse { position: relative; display: flex; justify-content: center; align-items: center; width: 80px; height: 80px; }
+.scanner-ring { position: absolute; width: 100%; height: 100%; border: 2px solid rgba(255, 107, 139, 0.6); border-radius: 50%; animation: radarGlow 2s infinite ease-out; }
+@keyframes radarGlow { 0% { transform: scale(0.4); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; border-color: #4affb0; } }
+.scanner-heart { font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(255, 107, 139, 0.8)); animation: heartBeatPulse 1.2s infinite ease-in-out; }
+@keyframes heartBeatPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+.camera-flash-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #ffffff; z-index: 9999; pointer-events: none; opacity: 0; }
+.run-flash-animation { animation: flashSnap 0.4s ease-out forwards; }
+
+.polaroid-eject-tray { display: none; margin-top: 30px; width: 100%; animation: slideDownTray 0.6s cubic-bezier(0.175, 0.885, 0.32, 1) forwards; }
+@keyframes slideDownTray { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+.suspense-film-card { position: relative; background: linear-gradient(135deg, #2b162a 0%, #150916 100%); border: 2px dashed rgba(255, 107, 139, 0.4); padding: 30px 20px; border-radius: 12px; max-width: 240px; width: 100%; margin: 0 auto 15px auto; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+.film-magic-shimmer { position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent); transform: skewX(-25deg); animation: shimmerGlance 2s infinite linear; }
+.film-loading-icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+.developing-text-status { font-family: 'Patrick Hand', cursive; font-size: 1.3rem; color: #ffd2de; }
+
+/* Chapter I Reveal: Polaroid Showcase */
+.polaroid-wrapper { background: var(--text-white); padding: 12px 12px 55px 12px; transform: rotate(-2deg); max-width: 250px; box-shadow: 0 15px 35px rgba(0,0,0,0.35); border-radius: 2px; margin: 0 auto; }
+.polaroid-photo { width: 100%; height: auto; display: block; aspect-ratio: 1; object-fit: cover; }
+.delayed-photo-reveal { animation: imageDevelop 2.5s ease-in-out forwards; }
+.dialogue-bubble { background: rgba(255, 255, 255, 0.08); border-left: 4px solid var(--accent-pink); padding: 15px; border-radius: 8px; color: #ebd4ef; font-size: 1.05rem; font-style: italic; line-height: 1.5; margin-bottom: 25px; text-align: left; }
+
+/* ==========================================
+   7. CHAPTER II LAYOUTS: ISLAND BEACH MAP (FIXED)
+   ========================================== */
+.beach-treasure-map { 
+    background: #f4dfb5; 
+    background-image: radial-gradient(circle at center, #fceecb 0%, #edd49e 100%), url('https://www.transparenttextures.com/patterns/sand.png'); 
+    border: 3px solid #7d6135; 
+    border-radius: 24px; 
+    padding: 35px 25px; 
+    width: 100%; 
+    max-width: 460px; 
+    min-height: 460px; /* Slight increase to give elements room to breathe */
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45); 
+    position: relative; 
+    text-align: center; 
+    overflow: hidden; 
+    clip-path: polygon(1% 3%, 99% 1%, 98% 97%, 95% 99%, 3% 97%, 0% 6%); 
+}
+
+/* Adjusted alignment and width to prevent text from colliding with the photo */
+.pirate-map-title { 
+    font-family: 'Rye', cursive; 
+    color: #3b2811; 
+    font-size: 1.6rem; 
+    margin-bottom: 8px; 
+    margin-top: 15px;
+    padding-right: 90px; /* Forces title text to wrap cleanly before touching the frame */
+    text-align: left;
+    padding-left: 10px;
+}
+
+.pirate-map-subtitle { 
+    font-family: 'Itim', sans-serif; 
+    font-size: 0.95rem; 
+    color: #5c4323; 
+    padding-right: 95px; /* Keeps instructions safely on the left side clear of the photo */
+    text-align: left;
+    padding-left: 10px;
+    line-height: 1.4; 
+    margin-bottom: 20px; 
+}
+
+.beach-treasure-map .map-compass-rose { 
+    position: absolute; 
+    top: 15px; 
+    left: 15px; 
+    font-size: 2rem; 
+    color: #6b4e23; 
+    opacity: 0.7; 
+}
+
+/* Corner Album Photo Box inside map bounds - SLANTED TILT */
+.map-corner-scrapbook-photo {
+    position: absolute;
+    top: 20px;
+    right: 15px;
+    background: white;
+    padding: 5px 5px 18px 5px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    max-width: 95px;
+    width: 100%;
+    border: 1px solid #ddd;
+    transform: rotate(6deg); /* Keeps your beautiful slanting layout */
+    z-index: 10;
+}
+.map-corner-scrapbook-photo img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+}
+
+/* Map Landscape Features Refined Coordinates */
+.island-feature { 
+    position: absolute; 
+    font-family: 'Patrick Hand', cursive; 
+    font-size: 1.1rem; 
+    color: #614620; 
+    font-weight: bold; 
+    line-height: 1.2; 
+    z-index: 5; 
+}
+.island-feature span { 
+    font-size: 0.8rem; 
+    opacity: 0.85; 
+    text-transform: uppercase; 
+}
+
+/* Lowered Isle safely out of the way of the main directions title */
+.palm-island { 
+    bottom: 120px; 
+    left: 25px; 
+}
+
+/* Relocated Our Ship to navigate open water spaces near the path curve */
+
+.sea-monster { 
+    top: 240px;  /* Increase this number to move the ship further down */
+    right: 25px; /* Decrease this number to move the ship closer to the right edge */
+    text-align: center; /* Ensures the label stays centered under the ship icon */
+    transition: transform 0.3s ease;
+}
+
+/* Centered path system guidelines */
+/* Updated path to curve specifically toward the new ship position */
+.dotted-trail-line { 
+    position: absolute; 
+    width: 220px;     /* Length of the path */
+    height: 100px;    /* Height of the curve */
+    bottom: 130px;    /* Distance from the bottom of the map */
+    left: 110px;      /* Starting offset */
+    border-bottom: 4px dashed #c94c4c; 
+    border-right: 4px dashed #c94c4c; 
+    border-radius: 0 0 120px 0; /* Creates the deeper arc curve */
+    pointer-events: none; 
+    z-index: 4; 
+    opacity: 0.75; 
+}
+.treasure-x-spot { 
+    position: absolute; 
+    bottom: 125px; 
+    right: 85px; 
+    z-index: 15; 
+    cursor: pointer; 
+    width: 45px; 
+    height: 45px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+.x-mark-character { font-size: 2rem; }
+.animated-ping-marker { position: absolute; width: 100%; height: 100%; background: rgba(217, 83, 79, 0.45); border-radius: 50%; animation: pingGlow 1.8s infinite ease-out; }
+
+.chest-modal-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(59, 40, 17, 0.88); z-index: 100; align-items: center; justify-content: center; padding: 20px; animation: simpleFade 0.3s ease-in-out forwards; }
+.chest-modal-content { text-align: center; max-width: 340px; width: 100%; color: #fbf3db; }
+.animated-chest-icon { font-size: 4rem; margin-bottom: 15px; animation: gentleFloat 2.5s ease-in-out infinite; }
+.chest-modal-content h3 { font-family: 'Rye', cursive; font-size: 1.35rem; color: #fcd581; margin-bottom: 10px; }
+.chest-modal-content p { font-family: 'Itim', sans-serif; font-size: 1rem; color: #dfcfb3; line-height: 1.4; margin-bottom: 25px; }
+.pirate-open-btn { background-color: #fcd581 !important; color: #402c11 !important; box-shadow: 0 4px 0px #b89342 !important; }
+
+/* Chapter II Reveal Canvas Layout: Parchment Scroll */
+.love-scroll-paper {
+    background: #f7ebcc;
+    background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+    box-shadow: inset 0 0 35px #b08d4e, 0 15px 40px rgba(0,0,0,0.5);
+    border: 1px solid #9c7b43;
+    padding: 35px;
+    border-radius: 6px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    border-left: 8px solid #856126;
+}
+
+.scroll-couple-photo-container {
+    background: var(--text-white);
+    padding: 8px 8px 30px 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transform: rotate(2deg);
+    max-width: 180px;
+    margin: 0 auto 20px auto;
+    border: 1px solid #ddd;
+}
+
+.scroll-couple-photo { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; display: block; }
+.scroll-ribbon { font-size: 2.2rem; margin-bottom: 5px; }
+.scroll-heading { font-family: 'Rye', cursive; color: #3b2505; font-size: 1.8rem; margin-bottom: 5px; }
+.scroll-divider { font-size: 0.9rem; color: #8c2520; margin-bottom: 20px; letter-spacing: 2px; }
+.scroll-body-content p { font-family: 'Patrick Hand', cursive; font-size: 1.35rem; line-height: 1.5; color: #3b2b15; text-align: justify; margin-bottom: 15px; }
+.dialogue-bubble-dark { background: rgba(0, 0, 0, 0.05); border-left: 4px solid #8c2520; padding: 12px 15px; border-radius: 6px; font-style: italic; font-weight: bold; }
+.pirate-return-btn { background-color: #856126 !important; color: white !important; box-shadow: 0 4px 0px #523b16 !important; margin-top: 20px; max-width: 280px; }
+
+/* ==========================================
+   8. CHAPTER III LAYOUTS: VINTAGE LETTER
+   ========================================== */
+.hold-heart-container { position: relative; width: 120px; height: 120px; margin: 40px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+.giant-hold-heart { font-size: 5.5rem; z-index: 5; transition: transform 0.1s; }
+.hold-heart-container:active .giant-hold-heart { transform: scale(0.9); }
+.pulsing-glow-circle { position: absolute; width: 100%; height: 100%; background: rgba(255, 107, 139, 0.25); border-radius: 50%; filter: blur(15px); animation: radialPulse 2s infinite ease-in-out; }
+
+.progress-bar-wrapper { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 20px; }
+.progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(to right, #ff85a2, #ff6b8b); transition: width 0.1s linear; }
+.hold-status-subtext { color: var(--text-muted); font-size: 1rem; margin-top: 15px; }
+
+/* Pinned Scroll Envelope Layout */
+.vintage-envelope-container { width: 100%; max-width: 620px; z-index: 10; position: relative; margin: 0 auto; }
+.vintage-paper-scroll { background: #f4ecd8; background-image: radial-gradient(circle at 50% 20%, #fbf8eb 0%, #ede1c3 100%); box-shadow: inset 0 0 40px rgba(139, 105, 66, 0.25), 0 15px 45px rgba(0,0,0,0.5); border: 1px solid #d2b48c; border-radius: 4px; padding: 40px; text-align: center; position: relative; border-top: 6px solid #b38f56; }
+
+.vintage-pinned-photos { display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px; }
+.pinned-photo { background: var(--text-white); padding: 6px 6px 20px 6px; box-shadow: 0 6px 15px rgba(0,0,0,0.15); max-width: 120px; width: 100%; border: 1px solid #ddd; }
+.pin-left { transform: rotate(-6deg); }
+.pin-right { transform: rotate(6deg); }
+.vintage-img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; display: block; }
+
+.vintage-wax-seal { font-size: 2.5rem; color: #a94442; opacity: 0.85; margin-bottom: 10px; }
+.vintage-heading { font-family: 'Cinzel', serif; font-weight: 700; color: #4a3319; font-size: 2rem; margin-bottom: 15px; letter-spacing: 1px; }
+.vintage-divider { border: 0; height: 1px; background: linear-gradient(to right, transparent, #8b6942, transparent); margin: 15px 0 25px 0; }
+.vintage-letter-body p { font-family: 'Patrick Hand', cursive; font-size: 1.35rem; line-height: 1.6; color: #2e2010; text-align: justify; margin-bottom: 18px; text-indent: 30px; }
+
+/* Footer Scrapbook photo frame inside the letter text body for a Couple picture slot */
+/* ==========================================
+   VINTAGE CONFESSION LETTER FOOTER LAYOUT
+   ========================================== */
+.letter-footer-flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    margin-top: 35px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(139, 105, 66, 0.15);
+}
+
+/* FIXED: Beautifully slanting leftward polaroid card nested inside letter bounds */
+.letter-footer-couple-card.slant-left-polaroid {
+    background: #ffffff;
+    padding: 8px 8px 24px 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    max-width: 130px;
+    width: 100%;
+    border: 1px solid #e2d7be;
+    transform: rotate(-5deg) translateY(-5px); /* Slanting look requested */
+    transition: transform 0.3s ease;
+}
+
+.letter-footer-couple-card.slant-left-polaroid:hover {
+    transform: rotate(-1deg) scale(1.05); 
+}
+
+.footer-couple-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+    border-radius: 2px;
+}
+
+.footer-card-caption {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1rem;
+    color: #5c4d3c;
+    margin-top: 6px;
+    font-weight: bold;
+    text-shadow: none !important;
+}
+
+.vintage-signature {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.9rem;
+    color: #7a201e;
+    text-align: right;
+    line-height: 1.3;
+    padding-bottom: 10px;
+}
+
+.vintage-signature span {
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+.premium-gold { background: linear-gradient(135deg, #e6b84a 0%, #b38f56 100%) !important; color: white !important; box-shadow: 0 4px 0px #806233 !important; }
+
+/* ==========================================
+   9. SHARED FLUID CSS KEYFRAME ANIMATIONS
+   ========================================== */
+.fade-in { animation: smoothFade 0.6s ease-out forwards; }
+.slide-up { animation: smoothSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-float { animation: floatingMotion 3s ease-in-out infinite; }
+
+@keyframes smoothFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes simpleFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes smoothSlideUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes floatingMotion { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes gentleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* ==========================================
+   CAMERA FLASH SHUTTER FX MECHANICS
+   ========================================== */
+.camera-flash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 99999; /* Higher layer forces it over everything during the click snap */
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* The structural active animation rule called by script shutter triggers */
+.run-flash-animation {
+    animation: flashSnapEffect 0.4s ease-out forwards;
+}
+
+@keyframes flashSnapEffect {
+    0% {
+        opacity: 0;
+    }
+    15% {
+        opacity: 1; /* Sudden bright white flash screen overlay burst */
+    }
+    100% {
+        opacity: 0; /* Smoothly fades out back to normal viewfinder state */
+    }
+}
+
+/* ==========================================
+   UPDATED MAP LANDSCAPE & SPARKLING X EFFECT
+   ========================================== */
+
+/* Relocated Our Ship slightly downwards to float gracefully in the open water space */
+.sea-monster { 
+    top: 195px; 
+    right: 55px; 
+    transition: transform 0.3s ease;
+}
+
+/* Beautiful Sparkling & Pulsing Glow effect for the red X cross */
+.treasure-x-spot { 
+    position: absolute; 
+    bottom: 125px; 
+    right: 85px; 
+    z-index: 15; 
+    cursor: pointer; 
+    width: 45px; 
+    height: 45px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    filter: drop-shadow(0 0 8px rgba(217, 83, 79, 0.6));
+    animation: goldSparkleGlow 2s infinite ease-in-out;
+}
+
+.x-mark-character { 
+    font-size: 2rem; 
+    position: relative;
+    z-index: 7;
+}
+
+/* Dynamic sparkle ping background pulse */
+.animated-ping-marker { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(255, 182, 193, 0.45); 
+    border-radius: 50%; 
+    animation: pingGlow 1.8s infinite ease-out;
+    z-index: 6;
+}
+
+@keyframes goldSparkleGlow {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 6px rgba(217, 83, 79, 0.6)) brightness(1);
+    }
+    50% {
+        transform: scale(1.12);
+        filter: drop-shadow(0 0 15px #ffd700) brightness(1.2); /* Shimmers with a lovely golden glow mid-pulse */
+    }
+}
+
+@keyframes pingGlow { 
+    0% { transform: scale(0.5); opacity: 1; } 
+    100% { transform: scale(2); opacity: 0; } 
+}
